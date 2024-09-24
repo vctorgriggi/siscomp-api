@@ -57,6 +57,7 @@ class PurchaseRequestService {
           as: "user",
         },
       ],
+      order: [["createdAt", "DESC"]],
     };
 
     /* RN: non-admin users can only see their own purchase requests */

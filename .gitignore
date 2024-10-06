@@ -131,7 +131,9 @@ build
 .yarn/install-state.gz
 .pnp.*
 
-#
+# Uploads
+uploads/
+
+# Temporary files
 db/
 seeders/
-uploads/

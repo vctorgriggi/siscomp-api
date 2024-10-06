@@ -24,6 +24,7 @@ router
     upload.single("file"),
     ProductCategoryController.updateById
   )
-  .delete("/:id", auth, isAdmin, ProductCategoryController.deleteById);
+  .delete("/:id", auth, isAdmin, ProductCategoryController.deleteById)
+  .delete("/i/:id", auth, isAdmin, ProductCategoryController.deleteImage);
 
 module.exports = router;

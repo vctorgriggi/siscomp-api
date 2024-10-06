@@ -9,6 +9,11 @@ var config = {
     dialect: "sqlite",
     storage: "./db/development.sqlite",
   },
+  test: {
+    /**
+     * Set up a different database for testing.
+     */
+  },
   production: {
     username: PG_USER,
     password: PG_PASSWORD,

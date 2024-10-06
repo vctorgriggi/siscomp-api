@@ -5,7 +5,10 @@ const deleteFile = (filePath) => {
   try {
     fs.unlinkSync(path.resolve(filePath));
   } catch (error) {
-    console.error(`Error deleting file: ${filePath}`, error);
+    console.warn(
+      `Occurred an problem while trying to delete the file: ${filePath}`,
+      error.message
+    );
   }
 };
 

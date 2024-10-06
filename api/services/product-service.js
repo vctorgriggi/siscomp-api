@@ -15,13 +15,13 @@ class ProductService {
       }
     }
 
-    const productByName = await database.Products.findOne({
+    const byName = await database.Products.findOne({
       where: {
         name: { [Op.iLike]: dto.name },
       },
     });
 
-    if (productByName) {
+    if (byName) {
       throw new Error("There is already a product with this name.");
     }
 
@@ -99,20 +99,20 @@ class ProductService {
       }
     }
 
-    const productByName = await database.Products.findOne({
+    const byName = await database.Products.findOne({
       where: {
         name: { [Op.iLike]: dto.name },
         id: { [Op.ne]: dto.id },
       },
     });
 
-    if (productByName) {
+    if (byName) {
       throw new Error("There is already a product with this name.");
     }
 
     try {
       product.name = dto.name;
-      product.imageUrl = dto.imageUrl;
+      if (dto.imageUrl) product.imageUrl = dto.imageUrl; // update image only if a new one is provided
       product.description = dto.description;
       product.productCategoryId = dto.productCategoryId;
 
@@ -142,6 +142,33 @@ class ProductService {
           id: id,
         },
       });
+    } catch (error) {
+      console.error("Service error:", error.message);
+      throw error;
+    }
+  }
+
+  async deleteImage(id) {
+    const product = await database.ProductCategories.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!product) {
+      throw new Error("Product not found.");
+    }
+
+    if (!product.imageUrl) {
+      throw new Error("Image not found.");
+    }
+
+    try {
+      product.imageUrl = null;
+
+      await product.save();
+
+      return await product.reload();
     } catch (error) {
       console.error("Service error:", error.message);
       throw error;

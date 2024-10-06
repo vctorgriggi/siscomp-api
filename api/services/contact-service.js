@@ -13,13 +13,13 @@ class ContactService {
       }
     }
 
-    const contactByEmail = await database.Contacts.findOne({
+    const byEmail = await database.Contacts.findOne({
       where: {
         email: { [Op.iLike]: dto.email },
       },
     });
 
-    if (contactByEmail) {
+    if (byEmail) {
       throw new Error("There is already a contact with this email address.");
     }
 
@@ -92,14 +92,14 @@ class ContactService {
       }
     }
 
-    const contactByEmail = await database.Contacts.findOne({
+    const byEmail = await database.Contacts.findOne({
       where: {
         email: { [Op.iLike]: dto.email },
         id: { [Op.ne]: dto.id },
       },
     });
 
-    if (contactByEmail) {
+    if (byEmail) {
       throw new Error("There is already a contact with this email address.");
     }
 

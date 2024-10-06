@@ -5,13 +5,13 @@ const database = require("../models");
 
 class SupplierService {
   async create(dto) {
-    const supplierByCnpj = await database.Suppliers.findOne({
+    const byCnpj = await database.Suppliers.findOne({
       where: {
         cnpj: { [Op.iLike]: dto.cnpj },
       },
     });
 
-    if (supplierByCnpj) {
+    if (byCnpj) {
       throw new Error("There is already a supplier with this CNPJ.");
     }
 
@@ -73,14 +73,14 @@ class SupplierService {
       throw new Error("Supplier not found.");
     }
 
-    const supplierByCnpj = await database.Suppliers.findOne({
+    const byCnpj = await database.Suppliers.findOne({
       where: {
         cnpj: { [Op.iLike]: dto.cnpj },
         id: { [Op.ne]: dto.id },
       },
     });
 
-    if (supplierByCnpj) {
+    if (byCnpj) {
       throw new Error("There is already a supplier with this CNPJ.");
     }
 

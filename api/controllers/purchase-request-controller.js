@@ -42,8 +42,8 @@ class PurchaseRequestController {
 
     try {
       const purchaseRequest = await purchaseRequestService.getById({
-        id,
         userId,
+        id,
       });
 
       return res.status(200).json(purchaseRequest);
@@ -58,7 +58,7 @@ class PurchaseRequestController {
     const { id } = req.params;
 
     try {
-      await purchaseRequestService.deleteById({ id, userId });
+      await purchaseRequestService.deleteById({ userId, id });
 
       return res.status(204).send();
     } catch (error) {

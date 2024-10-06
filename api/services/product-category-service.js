@@ -5,13 +5,13 @@ const database = require("../models");
 
 class ProductCategoryService {
   async create(dto) {
-    const productCategoryByName = await database.ProductCategories.findOne({
+    const byName = await database.ProductCategories.findOne({
       where: {
         name: { [Op.iLike]: dto.name },
       },
     });
 
-    if (productCategoryByName) {
+    if (byName) {
       throw new Error("There is already a product category with this name.");
     }
 
@@ -66,20 +66,20 @@ class ProductCategoryService {
       throw new Error("Product category not found.");
     }
 
-    const productCategoryByName = await database.ProductCategories.findOne({
+    const byName = await database.ProductCategories.findOne({
       where: {
         name: { [Op.iLike]: dto.name },
         id: { [Op.ne]: dto.id },
       },
     });
 
-    if (productCategoryByName) {
+    if (byName) {
       throw new Error("There is already a product category with this name.");
     }
 
     try {
       productCategory.name = dto.name;
-      productCategory.imageUrl = dto.imageUrl;
+      if (dto.imageUrl) productCategory.imageUrl = dto.imageUrl; // update image only if a new one is provided
 
       await productCategory.save();
 
@@ -107,6 +107,33 @@ class ProductCategoryService {
           id: id,
         },
       });
+    } catch (error) {
+      console.error("Service error:", error.message);
+      throw error;
+    }
+  }
+
+  async deleteImage(id) {
+    const productCategory = await database.ProductCategories.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!productCategory) {
+      throw new Error("Product category not found.");
+    }
+
+    if (!productCategory.imageUrl) {
+      throw new Error("Image not found.");
+    }
+
+    try {
+      productCategory.imageUrl = null;
+
+      await productCategory.save();
+
+      return await productCategory.reload();
     } catch (error) {
       console.error("Service error:", error.message);
       throw error;

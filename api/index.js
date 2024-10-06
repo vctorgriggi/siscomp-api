@@ -15,13 +15,13 @@ const app = express();
 const port = process.env.PORT || 3333;
 
 const corsOptions = {
-  origin: true, // ou ["http://localhost:5173", "https://example.com"]
+  origin: true, // or ["http://localhost:5173", "https://example.com"]
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 };
-app.use(cors(corsOptions));
 
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(morgan("tiny"));

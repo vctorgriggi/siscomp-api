@@ -1,6 +1,6 @@
 const database = require("../models");
 
-module.exports = async (req, res, next) => {
+const isAdmin = async (req, res, next) => {
   try {
     const user = await database.Users.findOne({
       where: {
@@ -27,3 +27,5 @@ module.exports = async (req, res, next) => {
     });
   }
 };
+
+module.exports = isAdmin;

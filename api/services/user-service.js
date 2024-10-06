@@ -10,13 +10,13 @@ const mailService = new MailService();
 
 class UserService {
   async create(dto) {
-    const userByEmail = await database.Users.findOne({
+    const byEmail = await database.Users.findOne({
       where: {
         email: { [Op.iLike]: dto.email },
       },
     });
 
-    if (userByEmail) {
+    if (byEmail) {
       throw new Error("There is already a user with this email.");
     }
 
@@ -39,10 +39,10 @@ class UserService {
 
         await mailService.sendMail(newUser.email, subject, text);
       } catch (error) {
-        throw new Error("User created, but email could not be sent.");
+        console.warn(
+          "There was a problem sending the email. Please try again later."
+        );
       }
-
-      return newUser;
     } catch (error) {
       console.error("Service error:", error.message);
       throw error;
@@ -86,14 +86,14 @@ class UserService {
       throw new Error("User not found.");
     }
 
-    const userByEmail = await database.Users.findOne({
+    const byEmail = await database.Users.findOne({
       where: {
         email: { [Op.iLike]: dto.email },
         id: { [Op.ne]: dto.id },
       },
     });
 
-    if (userByEmail) {
+    if (byEmail) {
       throw new Error("There is already a user with this email.");
     }
 

@@ -50,24 +50,22 @@ class ProductController {
 
   static async updateById(req, res) {
     const { id } = req.params;
-    const { name, description, productCategoryId, unsetImage } = req.body;
+    const { name, description, productCategoryId } = req.body;
     const imageUrl = req.file ? req.file.path : null;
 
     try {
-      const existing = await productService.getById(id);
+      const current = await productService.getById(id);
 
-      const toUpdate = { id, name, description, productCategoryId };
+      const updated = await productService.updateById({
+        id,
+        name,
+        imageUrl,
+        description,
+        productCategoryId,
+      });
 
-      if (imageUrl) {
-        toUpdate.imageUrl = imageUrl;
-      } else if (unsetImage) {
-        toUpdate.imageUrl = null;
-      }
-
-      const updated = await productService.updateById(toUpdate);
-
-      if (existing.imageUrl && (imageUrl || unsetImage)) {
-        deleteFile(existing.imageUrl);
+      if (current.imageUrl && imageUrl) {
+        deleteFile(current.imageUrl);
       }
 
       return res.status(200).json(updated);
@@ -91,6 +89,23 @@ class ProductController {
       }
 
       return res.status(204).send();
+    } catch (error) {
+      console.error("Controller error:", error.message);
+      return res.status(400).send({ message: error.message });
+    }
+  }
+
+  static async deleteImage(req, res) {
+    const { id } = req.params;
+
+    try {
+      const current = await productService.getById(id);
+
+      const updated = await productService.deleteImage(id);
+
+      deleteFile(current.imageUrl);
+
+      return res.status(200).json(updated);
     } catch (error) {
       console.error("Controller error:", error.message);
       return res.status(400).send({ message: error.message });

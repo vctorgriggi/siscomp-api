@@ -6,7 +6,7 @@ const auth = require("../middlewares/auth");
 const router = Router();
 
 router
-  /* authentication */
+  /* sign in, sign up, sign out */
   .post("/sign-in", AuthController.signIn)
   .post("/sign-up", AuthController.signUp)
   .post("/sign-out", AuthController.signOut)

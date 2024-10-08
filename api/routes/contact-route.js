@@ -1,7 +1,7 @@
 const { Router } = require("express");
 
 const ContactController = require("../controllers/contact-controller");
-const isAdmin = require("../middlewares/checkAdmin");
+const isAdmin = require("../middlewares/admin");
 const auth = require("../middlewares/auth");
 
 const router = Router();

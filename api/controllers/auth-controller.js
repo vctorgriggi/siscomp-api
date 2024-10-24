@@ -16,6 +16,7 @@ class AuthController {
       res.cookie("authToken", signIn.authToken, {
         httpOnly: true,
         secure: true,
+        sameSite: "None",
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
       });
 
@@ -40,6 +41,7 @@ class AuthController {
       res.cookie("authToken", signUp.authToken, {
         httpOnly: true,
         secure: true,
+        sameSite: "None",
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
       });
 

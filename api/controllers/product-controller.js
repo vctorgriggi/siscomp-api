@@ -1,12 +1,12 @@
 const ProductService = require("../services/product-service");
-const deleteFile = require("../utils/delete-file");
+const deleteFromS3 = require("../utils/delete-s3-file");
 
 const productService = new ProductService();
 
 class ProductController {
   static async create(req, res) {
     const { name, description, productCategoryId } = req.body;
-    const imageUrl = req.file ? req.file.path : null;
+    const imageUrl = req.file ? req.file.location : null;
 
     try {
       await productService.create({
@@ -18,7 +18,7 @@ class ProductController {
 
       return res.status(201).send();
     } catch (error) {
-      if (imageUrl) deleteFile(imageUrl);
+      if (imageUrl) await deleteFromS3(imageUrl);
       console.error("Controller error:", error.message);
       return res.status(400).send({ message: error.message });
     }
@@ -51,7 +51,7 @@ class ProductController {
   static async updateById(req, res) {
     const { id } = req.params;
     const { name, description, productCategoryId } = req.body;
-    const imageUrl = req.file ? req.file.path : null;
+    const imageUrl = req.file ? req.file.location : null;
 
     try {
       const current = await productService.getById(id);
@@ -65,12 +65,12 @@ class ProductController {
       });
 
       if (current.imageUrl && imageUrl) {
-        deleteFile(current.imageUrl);
+        await deleteFromS3(current.imageUrl);
       }
 
       return res.status(200).json(updated);
     } catch (error) {
-      if (imageUrl) deleteFile(imageUrl);
+      if (imageUrl) await deleteFromS3(imageUrl);
       console.error("Controller error:", error.message);
       return res.status(400).send({ message: error.message });
     }
@@ -85,7 +85,7 @@ class ProductController {
       await productService.deleteById(id);
 
       if (product.imageUrl) {
-        deleteFile(product.imageUrl);
+        await deleteFromS3(product.imageUrl);
       }
 
       return res.status(204).send();
@@ -103,7 +103,7 @@ class ProductController {
 
       const updated = await productService.deleteImage(id);
 
-      deleteFile(current.imageUrl);
+      await deleteFromS3(current.imageUrl);
 
       return res.status(200).json(updated);
     } catch (error) {

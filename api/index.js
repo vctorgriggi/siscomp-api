@@ -7,7 +7,6 @@ const express = require("express");
 const morgan = require("morgan");
 const multer = require("multer");
 const cors = require("cors");
-const path = require("path");
 
 const routes = require("./routes");
 
@@ -26,10 +25,6 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(morgan("tiny"));
 
-app.use(
-  "/public/uploads",
-  express.static(path.join(__dirname, "../public/uploads"))
-);
 app.use("/api", routes);
 
 app.use((error, req, res, next) => {

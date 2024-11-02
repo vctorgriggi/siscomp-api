@@ -8,6 +8,7 @@ API Node.js com Express e Sequelize para um Sistema de Compras, facilitando o ge
 - **Cadastro e Controle de Produtos:** Facilita o gerenciamento do cadastro e detalhes dos produtos.
 - **Requisições de Compra:** Permite a criação, acompanhamento e gerenciamento de requisições de compra.
 - **Criação e Gestão de Cotações:** Possibilita a criação e comparação de cotações de diferentes fornecedores.
+- **Upload e Manipulação de Imagens:** Suporte para upload de imagens e manipulação através dos serviços da AWS.
 - **Controle de Acesso:** Define níveis de acesso e permissões para diferentes usuários.
 - **Autenticação de Usuários:** Implementação de login e controle de sessão.
 - **Envio de Emails:** Suporte para envio de emails através do Nodemailer, útil para redefinição de senha e outras notificações.
@@ -19,6 +20,7 @@ API Node.js com Express e Sequelize para um Sistema de Compras, facilitando o ge
 - Sequelize
 - SQLite3 (para desenvolvimento)
 - PostgreSQL (para produção)
+- AWS SDK
 - JSON Web Tokens (JWT)
 - bcryptjs
 - Nodemailer
@@ -82,13 +84,13 @@ Siga os passos abaixo para rodar a API localmente
     #### Para Desenvolvimento (usando node --watch)
 
     ```bash
-    npm start:dev
+    npm run start:dev
     ```
 
     #### Para Produção
 
     ```bash
-    npm start
+    npm run start
     ```
 
 7.  **Acesse a API.**

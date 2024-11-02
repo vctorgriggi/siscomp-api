@@ -1,12 +1,12 @@
 const ProductCategoryService = require("../services/product-category-service");
-const deleteFile = require("../utils/delete-file");
+const deleteFromS3 = require("../utils/delete-s3-file");
 
 const productCategoryService = new ProductCategoryService();
 
 class ProductCategoryController {
   static async create(req, res) {
     const { name } = req.body;
-    const imageUrl = req.file ? req.file.path : null;
+    const imageUrl = req.file ? req.file.location : null;
 
     try {
       await productCategoryService.create({
@@ -16,7 +16,7 @@ class ProductCategoryController {
 
       return res.status(201).send();
     } catch (error) {
-      if (imageUrl) deleteFile(imageUrl);
+      if (imageUrl) await deleteFromS3(imageUrl);
       console.error("Controller error:", error.message);
       return res.status(400).send({ message: error.message });
     }
@@ -49,7 +49,7 @@ class ProductCategoryController {
   static async updateById(req, res) {
     const { id } = req.params;
     const { name } = req.body;
-    const imageUrl = req.file ? req.file.path : null;
+    const imageUrl = req.file ? req.file.location : null;
 
     try {
       const current = await productCategoryService.getById(id);
@@ -61,12 +61,12 @@ class ProductCategoryController {
       });
 
       if (current.imageUrl && imageUrl) {
-        deleteFile(current.imageUrl);
+        await deleteFromS3(current.imageUrl);
       }
 
       return res.status(200).json(updated);
     } catch (error) {
-      if (imageUrl) deleteFile(imageUrl);
+      if (imageUrl) await deleteFromS3(imageUrl);
       console.error("Controller error:", error.message);
       return res.status(400).send({ message: error.message });
     }
@@ -81,7 +81,7 @@ class ProductCategoryController {
       await productCategoryService.deleteById(id);
 
       if (productCategory.imageUrl) {
-        deleteFile(productCategory.imageUrl);
+        await deleteFromS3(productCategory.imageUrl);
       }
 
       return res.status(204).send();
@@ -99,7 +99,7 @@ class ProductCategoryController {
 
       const updated = await productCategoryService.deleteImage(id);
 
-      deleteFile(current.imageUrl);
+      await deleteFromS3(current.imageUrl);
 
       return res.status(200).json(updated);
     } catch (error) {

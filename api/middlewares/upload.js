@@ -1,18 +1,11 @@
+const multerS3 = require("multer-s3");
+const crypto = require("crypto");
 const multer = require("multer");
-const fs = require("fs");
+const path = require("path");
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const path = "public/uploads/";
-    fs.mkdirSync(path, { recursive: true });
-    cb(null, path);
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
+const s3 = require("../config/aws");
 
-const fileFilter = (req, file, cb) => {
+const filter = (req, file, cb) => {
   const allowedTypes = ["image/jpeg", "image/png"];
 
   if (!allowedTypes.includes(file.mimetype)) {
@@ -25,11 +18,19 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({
-  storage: storage,
+  storage: multerS3({
+    s3: s3,
+    bucket: process.env.AWS_BUCKET_NAME,
+    key: (req, file, cb) => {
+      const randomImageName = crypto.randomBytes(32).toString("hex");
+      const s3FileName = `${randomImageName}${path.extname(file.originalname)}`;
+      cb(null, `siscomp/uploads/${s3FileName}`);
+    },
+  }),
   limits: {
     fileSize: 1 * 1024 * 1024, // 1 mb
   },
-  fileFilter: fileFilter,
+  fileFilter: filter,
 });
 
 module.exports = upload;
